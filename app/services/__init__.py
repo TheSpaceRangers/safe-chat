@@ -1,0 +1,1 @@
+from .main import check_if_message_is_about_banned_topic

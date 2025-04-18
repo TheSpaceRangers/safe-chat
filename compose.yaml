@@ -1,0 +1,25 @@
+services:
+  safe-chat-api:
+    build: 
+      context: app
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    command: 
+      - fastapi
+      - dev
+      - app/main.py
+      - --port
+      - "80"
+      - --host
+      - "0.0.0.0"
+    volumes:
+      - ./app:/safe-chat/app
+    env_file:
+      - app/.env
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: always
+    command: bash -c "ollama serve & sleep 2 && ollama pull ${LLM_MODEL:-mistral} && wait"
