@@ -1,5 +1,10 @@
+from os import getenv
+from dotenv import load_dotenv
+
 from discord import Intents
 from discord.ext.commands import Bot
+
+load_dotenv()
 
 bot = Bot(
     command_prefix="!",
@@ -8,7 +13,7 @@ bot = Bot(
 
 @bot.event
 async def on_ready():
-    await (bot.get_channel(1362693353669529722)
+    await (bot.get_channel(getenv("DISCORD_CHANNEL_ID", "0"))
            .send("Bot démarré avec succès ✅"))
 
-bot.run("MTM2MjkyMTUyNzc0OTc3MTQwNA.GYpA8L.ztMp_cD6wvg6rpnmL7GxMdWYLALV8wz7OdSYjA")
+bot.run(getenv('DISCORD_TOKEN'))
