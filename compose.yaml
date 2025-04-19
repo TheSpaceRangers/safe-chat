@@ -1,4 +1,17 @@
 services:
+  ollama:
+    image: docker.io/ollama/ollama:latest
+    container_name: ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_KEEP_ALIVE=24h
+    command: serve | ollama pull mistral
+
   safe-chat-api:
     build: 
       context: app
@@ -18,6 +31,8 @@ services:
       - ./app:/safe-chat/app
     env_file:
       - app/.env
+    depends_on:
+      - ollama
 
   safe-chat-bot:
     build:
@@ -26,20 +41,8 @@ services:
     restart: always
     env_file:
       - bot/.env
-
-
-  ollama:
-    image: docker.io/ollama/ollama:latest
-    container_name: ollama
-    restart: always
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_KEEP_ALIVE=24h
-    command: serve | ollama pull mistral
+    depends_on:
+      - safe-chat-api
 
 volumes:
   ollama_data: {}
