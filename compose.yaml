@@ -3,8 +3,9 @@ services:
     build: 
       context: app
       dockerfile: Dockerfile
+    restart: always
     ports:
-      - 8000:80
+      - "8000:80"
     command: 
       - fastapi
       - dev
@@ -18,8 +19,25 @@ services:
     env_file:
       - app/.env
 
+  safe-chat-bot:
+    build:
+      context: bot
+      dockerfile: Dockerfile
+    restart: always
+
+
   ollama:
-    image: ollama/ollama
+    image: docker.io/ollama/ollama:latest
     container_name: ollama
     restart: always
-    command: bash -c "ollama serve & sleep 2 && ollama pull ${LLM_MODEL:-mistral} && wait"
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_KEEP_ALIVE=24h
+    command: serve | ollama pull mistral
+
+volumes:
+  ollama_data: {}

@@ -30,8 +30,5 @@ def get_rules() -> RuleResponse:
 
 @api_v1.post('/moderate')
 async def moderate(request: ModerationRequest) -> ModerationResponse:
-    is_about_banned_topic = await check_if_message_is_about_banned_topic(request.content, list(banned_topics))
-    return ModerationResponse(action="delete", reason=is_about_banned_topic)
-    # if is_about_banned_topic:
-    #    return ModerationResponse(action="delete", reason="Sujet sensible détecté via LLM")
-    # return ModerationResponse(action="allow", reason=None)
+    is_about_banned_topic: ModerationResponse = await check_if_message_is_about_banned_topic(request.content, list(banned_topics))
+    return is_about_banned_topic
