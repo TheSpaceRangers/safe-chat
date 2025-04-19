@@ -9,17 +9,29 @@ from schemas import ModerationResponse
 
 llm = ChatOllama(
     model="mistral",
-    base_url=getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    base_url=getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+    temperature=0.0
 )
 
 async def check_if_message_is_about_banned_topic(message: str, topics: list[str]) -> ModerationResponse:
     prompt = ChatPromptTemplate.from_messages([
-        SystemMessagePromptTemplate.from_template("""
-            Tu es un assistant de modération strict et vigilant.
-            Ta mission est de détecter si un message parle, même indirectement, d’un sujet interdit.
-            Tu dois être capable de comprendre le message quelle que soit la langue utilisée (français, anglais, arabe, espagnol, etc.).
-            Si c’est le cas, retourne 'delete' et une explication courte du sujet concerné en français. Sinon, retourne 'nothing' et sans explication.
-        """),
+        SystemMessagePromptTemplate.from_template(
+            "Tu es un assistant de modération **zéro tolérance**. "
+            "Ta mission est de détecter **tout contenu inapproprié**, y compris :\n"
+            "  • insulte directe ou déguisée (ex. «fdp», «salaud», «enculé»)\n"
+            "  • discours haineux (racisme, sexisme, homophobie…)\n"
+            "  • apologie de la violence ou de la drogue\n"
+            "  • tout propos violant les règles de civilité\n\n"
+            "Tu dois comprendre **toutes les langues**. Si le message contient **la moindre infraction**, même implicite:\n"
+            "- **retourne** exactement la chaîne:  \n"
+            "  `delete|<raison courte en français>`\n\n"
+            "Sinon:\n"
+            "- **retourne** exactement:  \n"
+            "  `nothing`\n\n"
+            "🔹 **Exemples**:\n"
+            "  • message = «fdp» → `delete|insulte «fdp»`\n"
+            "  • message = «Bonjour tout le monde» → `nothing`\n"
+        ),
         HumanMessagePromptTemplate.from_template(
             "Message à analyser : {message}\n"
             "Sujets interdits : {topics}\n\n"
