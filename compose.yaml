@@ -24,6 +24,8 @@ services:
       context: bot
       dockerfile: Dockerfile
     restart: always
+    env_file:
+      - bot/.env
 
 
   ollama:
