@@ -31,15 +31,13 @@ async def replace_with_placeholder(message: Message, reason: str):
             timestamp=message.created_at
         )
         embed.set_author(
-            name=message.author.display_name,
-            icon_url=message.author.display_avatar.url
+            name="Utilisateur",
+            icon_url=None
         )
         embed.set_footer(text="SafeChat", icon_url=message.guild.me.display_avatar.url)
 
         await webhook.send(
-            embed=embed,
-            username=message.author.display_name,
-            avatar_url=message.author.display_avatar.url
+            embed=embed
         )
     except Exception as e:
         print(e)

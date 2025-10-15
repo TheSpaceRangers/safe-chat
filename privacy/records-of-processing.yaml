@@ -1,0 +1,18 @@
+activity: "Modération automatisée des messages Discord"
+controller: "SafeChat"
+purposes:
+  - "Assurer un espace d’échange sûr"
+  - "Faire respecter les règles de la communauté"
+legal_basis: "Intérêt légitime (art. 6(1)(f) RGPD)"
+data_categories:
+  - "Contenu du message"
+  - "Identifiants Discord (affichage public évité)"
+recipients:
+  - "Discord (plateforme)"
+  - "Fournisseur du modèle (Mistral via Ollama local)"
+retention: "Aucune persistance applicative des messages; logs techniques courts (p.ex. 7 jours)"
+security_measures:
+  - "Anonymisation du placeholder"
+  - "Supervision humaine via appels"
+  - "CORS restreint, en-têtes sécurité"
+  - "Gestion de secrets par variables d’environnement"

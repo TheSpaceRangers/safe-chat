@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from discord import Intents, Interaction, Message, app_commands
 from discord.ext.commands import Bot
 
-from commands import Api, Topics
+from commands import Api, Topics, Appeal
 
 from utils import moderate_content, replace_with_placeholder
 
@@ -20,6 +20,7 @@ bot = Bot(
 async def on_ready():
     bot.tree.add_command(Api())
     bot.tree.add_command(Topics())
+    bot.tree.add_command(Appeal())
     await bot.tree.sync()
     await bot.get_channel(int(getenv("DISCORD_CHANNEL_ID", "0"))).send(f"Bot connecté : {bot.user}")
 
